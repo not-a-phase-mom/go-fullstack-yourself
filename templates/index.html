@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Siema kurwa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <h1>Siema, {{ if .user }} {{ .user.Name }} {{ else }} gościu {{ end }}!</h1>
+    <a href="/register">Register</a>
+    {{ if .user }}
+    <a href="/logout">Logout</a>
+    {{ else }}
+    <a href="/login">Login</a>
+    {{ end }}
+  </body>
+</html>
