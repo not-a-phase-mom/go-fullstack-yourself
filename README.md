@@ -1,4 +1,4 @@
-# Go Fullstack Website
+# Go Fullstack Yourself...bitch
 
 This is a Go-based fullstack web application with HTMX and Tailwind CSS for building modern, dynamic UIs. This project serves as a template for developing Go-based websites, and it includes reusable components like a `<head>` template for every page.
 
@@ -8,32 +8,10 @@ This is a Go-based fullstack web application with HTMX and Tailwind CSS for buil
 - [Project Structure](#project-structure)
 - [Development Setup](#development-setup)
 - [Running the Application](#running-the-application)
+- [Generating .templ files to .go files](#generating-templ-files-to-go-files)
 - [Building and Deploying](#building-and-deploying)
 - [Contributing](#contributing)
 - [License](#license)
-
----
-
-## Getting Started
-
-To get started with developing this Go web application, clone the repository and set up your environment:
-
-1. **Clone the Repository:**
-
-   ```bash
-   git clone https://github.com/yourusername/go-fullstack-your-project.git
-   cd go-fullstack-your-project
-   ```
-
-2. **Set Up Environment Variables:**
-
-   Copy `.env.example` to `.env` and fill in the required values for your local development environment.
-
-   ```bash
-   cp .env.example .env
-   ```
-
-   Make sure the `.env` file contains the correct environment variables for Postgres, Redis, and any other configurations.
 
 ---
 
@@ -58,17 +36,38 @@ The project structure is organized as follows:
 │   │   └── database.go       # Database connection
 │   └── redis                 # Redis-related logic
 │       └── redis.go          # Redis connection
-└── templates                 # HTML templates
-    ├── error.html            # Error page template
-    ├── index.html            # Home page template
-    ├── login.html            # Login page template
-    └── register.html        # Registration page template
+└── templates                 # Templates
+    ├── pages                 # Page-specific templates
+    │   ├── error.templ       # Error page template
+    │   ├── head.templ        # Reusable HTML head template
+    │   ├── index.templ       # Home page template
+    │   ├── login.templ       # Login page template
+    │   └── register.templ    # Registration page template
+    └── layout                # Layout templates
+        ├── layout.templ      # Reusable HTML layout template
+        └── auth.templ        # Authentication layout template
 ```
 
 - **`/static/`**: Holds the static assets such as your Tailwind CSS and JavaScript files.
-- **`/templates/`**: Contains the HTML templates, including the reusable `head.html`, `layout.html`, and page-specific templates.
+- **`/templates/`**: Contains the TEMPL templates, including the reusable `head.templ`, `layout.templ`, and page-specific templates.
 - **`main.go`**: Main Go application that renders templates and serves the web application.
 - **`.env`**: Stores the configuration for environment variables (e.g., Redis, Postgres, etc.).
+
+---
+
+## Generating .templ files to .go files
+
+The project uses `.templ` files for HTML templates, which are then compiled into Go code. To generate the `.go` files from the `.templ` files, you can use the `go-html-template` tool:
+
+1. Run the tool to generate the `.go` files:
+
+   ```bash
+   templ generate
+   ```
+
+   This will generate a `templates.go` file in the `templates` directory, which contains the compiled Go code for the templates.
+
+Now, whenever you make changes to the `.templ` files, you'll need to re-run the `go-html-template` command to update the generated Go code.
 
 ---
 
@@ -98,6 +97,22 @@ docker-compose up
 ```
 
 Make sure your `.env` file has the correct connection details for both services.
+
+---
+
+## Generating .templ files to .go files
+
+The project uses `.templ` files for HTML templates, which are then compiled into Go code. To generate the `.go` files from the `.templ` files, you can use the `go-html-template` tool:
+
+1. Run the tool to generate the `.go` files:
+
+   ```bash
+   templ generate
+   ```
+
+   This will generate a `templates.go` file in the `templates` directory, which contains the compiled Go code for the templates.
+
+Now, whenever you make changes to the `.templ` files, you'll need to re-run the `go-html-template` command to update the generated Go code.
 
 ---
 

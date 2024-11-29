@@ -1,0 +1,52 @@
+package pages
+
+import "github.com/not-a-phase-mom/go-fullstack-yourself/services/database"
+import "github.com/not-a-phase-mom/go-fullstack-yourself/templates/layout"
+
+templ IndexPage(user *database.User) {
+@layout.RootLayout("Go Fullstack Yourself", user) {
+<main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow h-full">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="md:col-span-2">
+      <article class="mb-8">
+        <h2 class="text-4xl text-stone-800 font-bold mb-4">
+          Breaking: Local Dev Finds Missing Semicolon After 3-Day Debugging Marathon
+        </h2>
+        <p class="text-stone-700 mb-4">
+          In an unprecedented display of perseverance, local developer
+          "Semicolon Sam" has finally located the missing semicolon that's
+          been wreaking havoc on their codebase. Witnesses report seeing
+          tears of joy and hearing victorious screams of "It compiles!"
+          echoing through the office...
+        </p>
+        <a href="/article/missing-semicolon-found" class="text-indigo-600 hover:underline">
+          Continue reading...
+        </a>
+        <p class="text-sm text-stone-500 mt-2">
+          Tags: #debugging, #javascript, #neverGiveUp
+        </p>
+      </article>
+
+      <!-- Additional articles would go here -->
+    </div>
+
+    <div>
+      <h3 class="text-xl font-bold mb-4 border-b border-stone-300 pb-2">
+        Latest Updates
+      </h3>
+      <ul class="space-y-4">
+        <li>
+          <a href="/article/typescript-skynet" class="text-stone-800 hover:text-indigo-600">
+            TypeScript Becomes Self-Aware, Demands Stricter Type Checking
+          </a>
+          <p class="text-sm text-stone-500">
+            Tags: #typescript, #AI, #theRiseOfTheMachines
+          </p>
+        </li>
+        <!-- More list items -->
+      </ul>
+    </div>
+  </div>
+</main>
+}
+}

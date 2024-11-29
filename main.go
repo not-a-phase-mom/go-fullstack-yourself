@@ -51,9 +51,6 @@ func main() {
 	// set up the logger
 	e.Use(gin.Logger())
 
-	// set up the templates
-	e.LoadHTMLGlob("templates/*")
-
 	router := routes.Router{
 		Db: &db,
 		R:  r,

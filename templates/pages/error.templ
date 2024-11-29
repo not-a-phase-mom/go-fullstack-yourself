@@ -1,0 +1,11 @@
+package pages
+
+import "github.com/not-a-phase-mom/go-fullstack-yourself/templates/layout"
+
+templ ErrorPage(message string) {
+
+@layout.RootLayout("Go Fullstack Yourself", nil) {
+<h1 class="text-2xl">Error</h1>
+<p>{ message }</p>
+}
+}
