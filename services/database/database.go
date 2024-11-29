@@ -12,6 +12,12 @@ type Database struct {
 	db *pgx.Conn
 }
 
+type Article struct {
+	Title string
+	URL   string
+	Tags  []string
+}
+
 type User struct {
 	Id       string `json:"id"`
 	Email    string `json:"email"`
