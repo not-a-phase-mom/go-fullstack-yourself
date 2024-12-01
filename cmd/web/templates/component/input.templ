@@ -1,0 +1,192 @@
+package component
+
+import (
+	"context"
+	"io"
+)
+
+// Input Base Styles
+var INPUT_BASE = `block w-full px-3 py-2 border border-stone-300 shadow-sm
+placeholder-stone-400 focus:outline-none sm:text-sm`
+
+// Input Type Enum
+type InputType int
+
+const (
+	InputTypeText InputType = iota
+	InputTypePassword
+	InputTypeEmail
+	InputTypeNumber
+	InputTypeDate
+	InputTypeFile
+)
+
+func (it InputType) String() string {
+	switch it {
+	case InputTypeText:
+		return "text"
+	case InputTypePassword:
+		return "password"
+	case InputTypeEmail:
+		return "email"
+	case InputTypeNumber:
+		return "number"
+	case InputTypeDate:
+		return "date"
+	case InputTypeFile:
+		return "file"
+	default:
+		return "text"
+	}
+}
+
+// Input Color Enum
+type InputColor int
+
+const (
+	InputColorDefault InputColor = iota
+	InputColorPrimary
+	InputColorSecondary
+	InputColorError
+)
+
+func (ic InputColor) String() string {
+	switch ic {
+	case InputColorDefault:
+		return "border-stone-300 focus:ring-indigo-500 focus:border-indigo-500"
+	case InputColorPrimary:
+		return "border-indigo-300 focus:ring-indigo-500 focus:border-indigo-500"
+	case InputColorSecondary:
+		return "border-stone-500 focus:ring-stone-500 focus:border-stone-500"
+	case InputColorError:
+		return "border-red-500 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500"
+	default:
+		return ""
+	}
+}
+
+// Input Size Enum
+type InputSize int
+
+const (
+	InputSizeSM InputSize = iota
+	InputSizeMD
+	InputSizeLG
+)
+
+func (is InputSize) String() string {
+	switch is {
+	case InputSizeSM:
+		return "py-1 px-2 text-xs"
+	case InputSizeMD:
+		return "py-2 px-3 text-sm"
+	case InputSizeLG:
+		return "py-3 px-4 text-base"
+	default:
+		return ""
+	}
+}
+
+// Input Struct
+type Input struct {
+	Type         InputType
+	Color        InputColor
+	Size         InputSize
+	Name         string
+	ID           string
+	Placeholder  string
+	Autocomplete string
+	Required     bool
+	Disabled     bool
+	Value        string
+}
+
+// Input functional options
+func NewInput(opts ...func(*Input)) *Input {
+	input := &Input{}
+
+	for _, opt := range opts {
+		opt(input)
+	}
+
+	return input
+}
+
+func WithInputType(t InputType) func(*Input) {
+	return func(i *Input) {
+		i.Type = t
+	}
+}
+
+func WithInputColor(c InputColor) func(*Input) {
+	return func(i *Input) {
+		i.Color = c
+	}
+}
+
+func WithInputSize(s InputSize) func(*Input) {
+	return func(i *Input) {
+		i.Size = s
+	}
+}
+
+func WithInputName(name string) func(*Input) {
+	return func(i *Input) {
+		i.Name = name
+	}
+}
+
+func WithInputID(id string) func(*Input) {
+	return func(i *Input) {
+		i.ID = id
+	}
+}
+
+func WithInputPlaceholder(placeholder string) func(*Input) {
+	return func(i *Input) {
+		i.Placeholder = placeholder
+	}
+}
+
+func WithInputAutocomplete(autocomplete string) func(*Input) {
+	return func(i *Input) {
+		i.Autocomplete = autocomplete
+	}
+}
+
+func WithInputRequired(required bool) func(*Input) {
+	return func(i *Input) {
+		i.Required = required
+	}
+}
+
+func WithInputDisabled(disabled bool) func(*Input) {
+	return func(i *Input) {
+		i.Disabled = disabled
+	}
+}
+
+func WithInputValue(value string) func(*Input) {
+	return func(i *Input) {
+		i.Value = value
+	}
+}
+
+func (i *Input) Render(ctx context.Context, w io.Writer) error {
+	return input(i).Render(ctx, w)
+}
+
+templ input(i *Input) {
+	<input
+		type={ i.Type.String() }
+		id={ i.ID }
+		name={ i.Name }
+		placeholder={ i.Placeholder }
+		autocomplete={ i.Autocomplete }
+		value={ i.Value }
+		required?={ i.Required }
+		disabled?={ i.Disabled }
+		class={ classes(INPUT_BASE, i.Color.String(),
+	i.Size.String()) }
+	/>
+}

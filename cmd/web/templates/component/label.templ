@@ -1,0 +1,80 @@
+package component
+
+import (
+	"context"
+	"io"
+)
+
+// Label Base Styles
+var LABEL_BASE = `block text-sm font-medium text-stone-700`
+
+// Label Color Enum
+type LabelColor int
+
+const (
+	LabelColorDefault LabelColor = iota
+	LabelColorPrimary
+	LabelColorSecondary
+	LabelColorError
+)
+
+func (lc LabelColor) String() string {
+	switch lc {
+	case LabelColorDefault:
+		return "text-stone-700"
+	case LabelColorPrimary:
+		return "text-indigo-700"
+	case LabelColorSecondary:
+		return "text-stone-900"
+	case LabelColorError:
+		return "text-red-700"
+	default:
+		return ""
+	}
+}
+
+// Label Struct
+type Label struct {
+	For   string
+	Color LabelColor
+	Text  string
+}
+
+// Label functional options
+func NewLabel(opts ...func(*Label)) *Label {
+	label := &Label{}
+
+	for _, opt := range opts {
+		opt(label)
+	}
+
+	return label
+}
+
+func WithLabelFor(for_ string) func(*Label) {
+	return func(l *Label) {
+		l.For = for_
+	}
+}
+
+func WithLabelColor(c LabelColor) func(*Label) {
+	return func(l *Label) {
+		l.Color = c
+	}
+}
+
+func WithLabelText(text string) func(*Label) {
+	return func(l *Label) {
+		l.Text = text
+	}
+}
+
+func (l *Label) Render(ctx context.Context, w io.Writer) error {
+	return label(l).Render(ctx, w)
+}
+
+templ label(l *Label) {
+	<label for={ l.For } class={ classes(LABEL_BASE, l.Color.String()) }>
+		{ l.Text }
+	</label>
+}

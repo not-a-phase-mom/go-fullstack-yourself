@@ -1,0 +1,45 @@
+package pages
+
+import (
+	"fmt"
+	"github.com/not-a-phase-mom/go-fullstack-yourself/cmd/web/templates/layout"
+	"github.com/not-a-phase-mom/go-fullstack-yourself/internal/database"
+)
+
+templ ArticlesPage(user *database.User, articles []database.Article) {
+	@layout.RootLayout("Go Fullstack Yourself | Articles", user) {
+		<main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
+			// <h1 class="text-4xl font-bold mb-8 text-center">Latest Articles</h1>
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+				for _, article := range articles {
+					<article class="border-b border-stone-300 pb-6 mb-6">
+						<h2 class="text-2xl font-bold mb-2">
+							<a href={ templ.SafeURL("/articles/" + article.Slug) } class="text-stone-800 hover:text-indigo-600">
+								{ article.Title }
+							</a>
+						</h2>
+						<p class="text-sm text-stone-500 mb-2">
+							Published on
+							<span data-date={ article.PublishedAt.String() } id="date-published">
+								{ fmt.Sprintf("%v",
+					article.PublishedAt) }
+							</span>
+						</p>
+						<p class="mb-4">{ article.Excerpt }</p>
+						<div class="flex flex-wrap gap-2">
+							for _, tag := range article.Tags {
+								<span class="text-xs bg-stone-200 text-stone-700 px-2 py-1 rounded">
+									#{ tag.Name }
+								</span>
+							}
+						</div>
+					</article>
+				}
+			</div>
+			<div class="mt-8 flex justify-center">
+				<button class="bg-indigo-600 text-white px-4 py-2 mr-2 hover:bg-indigo-700">Previous</button>
+				<button class="bg-indigo-600 text-white px-4 py-2 hover:bg-indigo-700">Next</button>
+			</div>
+		</main>
+	}
+}

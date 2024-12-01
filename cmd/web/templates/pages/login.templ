@@ -1,0 +1,67 @@
+package pages
+
+import (
+	"github.com/not-a-phase-mom/go-fullstack-yourself/cmd/web/templates/component"
+	"github.com/not-a-phase-mom/go-fullstack-yourself/cmd/web/templates/layout"
+)
+
+templ LoginPage(errorMessage string) {
+	@layout.AuthLayout("Login") {
+		<div id="error-message">
+			if errorMessage != "" {
+				<div class="px-4 py-3 text-red-700 bg-red-100 border border-red-400 rounded">
+					{ errorMessage }
+				</div>
+			}
+		</div>
+		<form hx-post="/login" hx-target="#error-message" hx-swap="innerHTML" class="mt-8 space-y-6" method="POST">
+			<div class="space-y-4">
+				<div>
+					@component.NewLabel(
+						component.WithLabelFor("email"),
+						component.WithLabelText("Email address"),
+					)
+					@component.NewInput(
+						component.WithInputType(component.InputTypeEmail),
+						component.WithInputID("email"),
+						component.WithInputName("email"),
+						component.WithInputAutocomplete("email"),
+						component.WithInputRequired(true),
+						component.WithInputColor(component.InputColorDefault),
+						component.WithInputSize(component.InputSizeMD),
+					)
+				</div>
+				<div>
+					@component.NewLabel(
+						component.WithLabelFor("password"),
+						component.WithLabelText("Password"),
+					)
+					@component.NewInput(
+						component.WithInputType(component.InputTypePassword),
+						component.WithInputID("password"),
+						component.WithInputName("password"),
+						component.WithInputAutocomplete("current-password"),
+						component.WithInputRequired(true),
+						component.WithInputColor(component.InputColorDefault),
+						component.WithInputSize(component.InputSizeMD),
+					)
+				</div>
+			</div>
+			<div>
+				@component.NewButton(
+					component.WithButtonColor(component.ButtonPrimary),
+					component.WithButtonSize(component.ButtonSizeMD),
+					component.WithButtonType(component.ButtonTypeSubmit),
+				) {
+					Login
+				}
+			</div>
+		</form>
+		<p class="mt-2 text-sm text-center text-stone-600">
+			Not a member?
+			<a href="/register" class="font-medium text-indigo-600 hover:text-indigo-500">
+				Register
+			</a>
+		</p>
+	}
+}

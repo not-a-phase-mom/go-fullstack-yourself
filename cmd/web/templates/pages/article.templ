@@ -1,0 +1,15 @@
+package pages
+
+import (
+	"github.com/not-a-phase-mom/go-fullstack-yourself/cmd/web/templates/layout"
+	"github.com/not-a-phase-mom/go-fullstack-yourself/internal/database"
+)
+
+templ ArticlePage(user *database.User, article *database.Article) {
+	@layout.RootLayout("Go Fullstack Yourself | "+article.Title, user) {
+		<div>
+			<h1 class="text-2xl">{ article.Title }</h1>
+			<p>{ article.Content }</p>
+		</div>
+	}
+}

@@ -1,0 +1,88 @@
+package pages
+
+import (
+	"github.com/not-a-phase-mom/go-fullstack-yourself/cmd/web/templates/component"
+	"github.com/not-a-phase-mom/go-fullstack-yourself/cmd/web/templates/layout"
+)
+
+templ RegisterPage(errorMessage string) {
+	@layout.AuthLayout("Register") {
+		<div id="error-message">
+			if errorMessage != "" {
+				<div class="px-4 py-3 text-red-700 bg-red-100 border border-red-400 rounded">
+					{ errorMessage }
+				</div>
+			}
+		</div>
+		<form
+			hx-post="/register"
+			hx-target="#error-message"
+			hx-swap="innerHTML"
+			class="mt-8 space-y-6"
+			method="POST"
+		>
+			<div class="space-y-4">
+				<div>
+					@component.NewLabel(
+						component.WithLabelFor("name"),
+						component.WithLabelText("Full Name"),
+					)
+					@component.NewInput(
+						component.WithInputType(component.InputTypeText),
+						component.WithInputID("name"),
+						component.WithInputName("name"),
+						component.WithInputAutocomplete("name"),
+						component.WithInputRequired(true),
+						component.WithInputColor(component.InputColorDefault),
+						component.WithInputSize(component.InputSizeMD),
+					)
+				</div>
+				<div>
+					@component.NewLabel(
+						component.WithLabelFor("email"),
+						component.WithLabelText("Email address"),
+					)
+					@component.NewInput(
+						component.WithInputType(component.InputTypeEmail),
+						component.WithInputID("email"),
+						component.WithInputName("email"),
+						component.WithInputAutocomplete("email"),
+						component.WithInputRequired(true),
+						component.WithInputColor(component.InputColorDefault),
+						component.WithInputSize(component.InputSizeMD),
+					)
+				</div>
+				<div>
+					@component.NewLabel(
+						component.WithLabelFor("password"),
+						component.WithLabelText("Password"),
+					)
+					@component.NewInput(
+						component.WithInputType(component.InputTypePassword),
+						component.WithInputID("password"),
+						component.WithInputName("password"),
+						component.WithInputAutocomplete("current-password"),
+						component.WithInputRequired(true),
+						component.WithInputColor(component.InputColorDefault),
+						component.WithInputSize(component.InputSizeMD),
+					)
+				</div>
+			</div>
+			<div>
+				@component.NewButton(
+					component.WithButtonColor(component.ButtonPrimary),
+					component.WithButtonSize(component.ButtonSizeMD),
+					component.WithButtonType(component.ButtonTypeSubmit),
+				) {
+					Register
+				}
+			</div>
+		</form>
+		<p class="mt-2 text-sm text-center text-stone-600">
+			Already have an account?
+			<a href="/login" class="font-medium text-indigo-600 hover:text-indigo-500">
+				Login
+			</a>
+		</p>
+	}
+}

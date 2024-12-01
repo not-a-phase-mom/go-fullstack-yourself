@@ -1,0 +1,62 @@
+@import "tailwindcss";
+/*@import "tailwindcss/base";*/
+/*@import "tailwindcss/components";*/
+/*@import "tailwindcss/utilities";*/
+
+@source "./cmd/web/templates/**/*.html";
+@source "./cmd/web/templates/**/*.templ";
+
+
+@layer theme, base, components, utilities;
+
+@layer theme {
+  :root {
+    --font-sans: 'Inter', sans-serif;
+    --font-serif: 'IBM Plex Serif', serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+    --font-display: 'Poppins', sans-serif;
+
+
+    /* ... */
+  }
+}
+
+@layer base {
+
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0 solid;
+  }
+
+  /* ... */
+}
+
+@layer utilities {
+  .pointer-events-none {
+    pointer-events: none;
+  }
+
+  .visibility-hidden {
+    visibility: hidden;
+  }
+
+  /* ... */
+
+  .focus\:outline:focus {
+    outline-width: 1px;
+  }
+
+  @media (width >=40rem) {
+    @media (hover: hover) {
+      .sm\:hover\:opacity-100:hover {
+        opacity: 100%;
+      }
+    }
+  }
+}

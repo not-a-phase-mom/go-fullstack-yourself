@@ -1,0 +1,140 @@
+package component
+
+import (
+	"context"
+	"io"
+	"strings"
+)
+
+var BUTTON_BASE = `flex justify-center items-center py-2 px-4 border border-transparent text-sm font-medium
+focus:outline-none focus:ring-2 focus:ring-offset-2`
+
+type ButtonType int
+type ButtonColor int
+type ButtonSize int
+
+const (
+	ButtonTypeButton ButtonType = iota
+	ButtonTypeSubmit
+)
+
+func (btn ButtonType) String() string {
+	switch btn {
+	case ButtonTypeButton:
+		return "button"
+	case ButtonTypeSubmit:
+		return "submit"
+	default:
+		return ""
+	}
+}
+
+const (
+	ButtonPrimary ButtonColor = iota
+	ButtonSecondary
+)
+
+func (btn ButtonColor) String() string {
+	switch btn {
+	case ButtonPrimary:
+		return "bg-indigo-600 text-white hover:bg-indigo-700"
+	case ButtonSecondary:
+		return "bg-stone-700 text-white hover:bg-stone-800 text-white"
+	default:
+		return ""
+	}
+}
+
+const (
+	ButtonSizeSM ButtonSize = iota
+	ButtonSizeMD
+	ButtonSizeLG
+)
+
+func (btn ButtonSize) String() string {
+	switch btn {
+	case ButtonSizeSM:
+		return "py-1 px-3 text-xs"
+	case ButtonSizeMD:
+		return "py-2 px-4 text-sm"
+	case ButtonSizeLG:
+		return "py-3 px-5 text-base"
+	default:
+		return ""
+	}
+}
+
+type Button struct {
+	Type     ButtonType
+	Color    ButtonColor
+	Size     ButtonSize
+	Disabled bool
+	OnClick  templ.ComponentScript
+	Class    string
+}
+
+func NewButton(opts ...func(*Button)) *Button {
+	button := &Button{}
+
+	for _, opt := range opts {
+		opt(button)
+	}
+
+	return button
+}
+
+func WithButtonType(t ButtonType) func(*Button) {
+	return func(b *Button) {
+		b.Type = t
+	}
+}
+
+func WithButtonColor(c ButtonColor) func(*Button) {
+	return func(b *Button) {
+		b.Color = c
+	}
+}
+
+func WithButtonSize(s ButtonSize) func(*Button) {
+	return func(b *Button) {
+		b.Size = s
+	}
+}
+
+func WithButtonDisabled(d bool) func(*Button) {
+	return func(b *Button) {
+		b.Disabled = d
+	}
+}
+
+func WithButtonOnClick(o templ.ComponentScript) func(*Button) {
+	return func(b *Button) {
+		b.OnClick = o
+	}
+}
+
+func WithButtonClass(c string) func(*Button) {
+	return func(b *Button) {
+		b.Class = c
+	}
+}
+
+func (b *Button) Render(ctx context.Context, w io.Writer) error {
+	return button(b).Render(ctx, w)
+}
+
+templ button(b *Button) {
+	<button
+		disabled?={ b.Disabled }
+		type={ b.Type.String() }
+		class={ classes(BUTTON_BASE, b.Color.String(),
+	b.Size.String(), b.Class) }
+		onclick={ b.OnClick }
+	>
+		{ children... }
+	</button>
+}
+
+func classes(classes ...string) string {
+	return strings.Join(classes, " ")
+}

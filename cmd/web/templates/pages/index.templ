@@ -1,0 +1,75 @@
+package pages
+
+import (
+	"fmt"
+	"github.com/not-a-phase-mom/go-fullstack-yourself/cmd/web/templates/layout"
+	"github.com/not-a-phase-mom/go-fullstack-yourself/internal/database"
+)
+
+func getMarginBottom(i int) string {
+	if i == 0 {
+		return "mb-8"
+	}
+	return ""
+}
+
+templ IndexPage(user *database.User, articles []database.Article, latestUpdates []database.Article) {
+	{{ fmt.Println(articles) }}
+	@layout.RootLayout("Go Fullstack Yourself", user) {
+		<main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow h-full">
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+				<div class="md:col-span-2">
+					for i, article := range articles {
+						<article class={ getMarginBottom(i) }>
+							<h2
+								class={ "text-stone-800 font-bold mb-4" , templ.SafeClass(func() string { if i==0 { return "text-4xl" }
+					return "text-2xl" }()) }
+							>
+								{ article.Title }
+							</h2>
+							<p class="text-stone-700 mb-4">
+								{ article.Excerpt }
+							</p>
+							<a href={ templ.SafeURL("/articles/" + article.Slug) } class="text-indigo-600 hover:underline">
+								Read more...
+							</a>
+							<p class="text-sm text-stone-500 mt-2">
+								Tags:
+								for j, tag := range article.Tags {
+									if j > 0 {
+										,
+									}
+									#{ tag.Name }
+								}
+							</p>
+						</article>
+					}
+				</div>
+				<div>
+					<h3 class="text-xl font-bold mb-4 flex justify-between items-center border-b border-stone-300 pb-2">
+						<span>Latest Updates</span>
+						<p id="current-date" class="capitalize text-sm font-normal text-stone-600"></p>
+					</h3>
+					<ul class="space-y-4">
+						for _, article := range latestUpdates {
+							<li>
+								<a href="#" class="text-stone-800 hover:text-indigo-600">
+									{ article.Title }
+								</a>
+								<p class="text-sm text-stone-500">
+									Tags:
+									for i, tag := range article.Tags {
+										if i > 0 {
+											,
+										}
+										#{ tag.Name }
+									}
+								</p>
+							</li>
+						}
+					</ul>
+				</div>
+			</div>
+		</main>
+	}
+}
