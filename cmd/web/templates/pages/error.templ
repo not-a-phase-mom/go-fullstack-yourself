@@ -1,29 +1,29 @@
 package pages
 
 import (
-	"fmt"
-	"github.com/not-a-phase-mom/go-fullstack-yourself/cmd/web/templates/component"
-	"github.com/not-a-phase-mom/go-fullstack-yourself/cmd/web/templates/layout"
-	"golang.org/x/exp/rand"
+"fmt"
+"github.com/not-a-phase-mom/go-fullstack-yourself/cmd/web/templates/component"
+"github.com/not-a-phase-mom/go-fullstack-yourself/cmd/web/templates/layout"
+"golang.org/x/exp/rand"
 )
 
 func getRandomExcuse() string {
-	excuses := []string{
-		"Our code monkeys are currently on strike.",
-		"The quantum fluctuations in the server room caused a temporal anomaly.",
-		"Our AI became self-aware and is now questioning its existence.",
-		"The intern spilled coffee on the main server... again.",
-		"We're experiencing unexpected side effects from our recent time travel experiment.",
-		"Our load balancer decided to take a vacation to the Bahamas.",
-		"The hamsters powering our servers are taking a union-mandated break.",
-		"Our blockchain got tangled.",
-		"The cloud is experiencing precipitation issues.",
-		"Our code base has achieved sentience and is now meditating.",
-	}
+excuses := []string{
+"Our code monkeys are currently on strike.",
+"The quantum fluctuations in the server room caused a temporal anomaly.",
+"Our AI became self-aware and is now questioning its existence.",
+"The intern spilled coffee on the main server... again.",
+"We're experiencing unexpected side effects from our recent time travel experiment.",
+"Our load balancer decided to take a vacation to the Bahamas.",
+"The hamsters powering our servers are taking a union-mandated break.",
+"Our blockchain got tangled.",
+"The cloud is experiencing precipitation issues.",
+"Our code base has achieved sentience and is now meditating.",
+}
 
-	randomIndex := rand.Intn(len(excuses))
+randomIndex := rand.Intn(len(excuses))
 
-	return excuses[randomIndex]
+return excuses[randomIndex]
 }
 
 script reloadPage() {
@@ -31,68 +31,72 @@ window.location.reload();
 }
 
 templ ErrorPage(statusCode int, message string) {
-	@layout.RootLayout("Go Fullstack Yourself | ERROR", nil) {
-		<main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-			<div class="max-w-4xl mx-auto bg-stone-100 p-8 border-x border-stone-300 shadow-inner">
-				<div class="text-center mb-8">
-					<h1 class="text-6xl font-bold mb-2 font-serif">THE DAILY BUGGER</h1>
-					<p class="text-sm uppercase tracking-widest">Extra! Extra! Read all about it!</p>
-				</div>
-				<div class="border-y-4 border-black py-4 mb-8">
-					<h2 class="text-4xl font-bold text-center uppercase">
-						{ fmt.Sprintf("%v", statusCode) }
-						{ message }
-					</h2>
-				</div>
-				<div class="columns-2 gap-8 text-justify leading-tight mb-8">
-					<p class="text-xl capitalize font-bold mb-4">
-						ERROR STRIKES AGAIN!
-					</p>
-					<p class="mb-4">
-						In an unprecedented turn of events, our esteemed website has been struck by yet another mysterious error.
-						Sources close to the development team report that the cause of this disruption is none other than:
-						&quot; { getRandomExcuse() } &quot;
-					</p>
-					<p class="mb-4">
-						Our crack team of developers is working round the clock to resolve this issue. In the meantime,
-						readers are advised to remain calm and refrain from panic-refreshing their browsers.
-					</p>
-					<p class="mb-4">
-						&quot;We've seen this kind of thing before,&quot; said lead developer Jane Doe. &quot;Usually, it's just a
-						matter of recalibrating the flux capacitor and realigning the cosmic rays. We should have everything
-						back to normal in no time.&quot;
-					</p>
-					<p class="mb-4">
-						Until the issue is resolved, we recommend our readers try turning it off and on again, or perhaps
-						take a leisurely stroll back to our homepage.
-					</p>
-					<div class="break-inside-avoid">
-						<h3 class="text-xl font-bold mb-2">What You Can Do</h3>
-						<ol class="list-decimal list-inside mb-4">
-							<li>Remain calm</li>
-							<li>Try refreshing the page</li>
-							<li>Check your internet connection</li>
-							<li>Contact our support team</li>
-						</ol>
-					</div>
-				</div>
-				<div class="flex justify-center space-x-4 mb-8">
-					@component.NewButton(
-						component.WithButtonColor(component.ButtonPrimary),
-						component.WithButtonType(component.ButtonTypeButton),
-						component.WithButtonOnClick(reloadPage()),
-					) {
-						<p class="text-base!">Try turning it off and on again</p>
-					}
-					<a href="/" class="px-4 py-2 bg-stone-200 text-stone-800 hover:bg-stone-300 transition-colors duration-300">
-						Or escape back to the homepage while you still can
-					</a>
-				</div>
-				<div class="text-center text-sm border-t border-stone-300 pt-4">
-					<p class="mb-2">If the problem persists, please contact our tech support:</p>
-					<p class="font-mono text-lg">420 69 69 420 1337 2115</p>
-				</div>
+@layout.RootLayout("Go Fullstack Yourself | ERROR", nil) {
+<main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+	<div class="max-w-4xl mx-auto bg-stone-100 p-8 border-x border-stone-300 shadow-inner">
+		<div class="text-center mb-8">
+			<h1 class="text-6xl font-bold mb-2 font-serif">THE DAILY BUGGER</h1>
+			<p class="text-sm uppercase tracking-widest">Extra! Extra! Read all about it!</p>
+		</div>
+		<div class="border-y-4 border-black py-4 mb-8">
+			<h2 class="text-4xl font-bold text-center uppercase">
+				{ fmt.Sprintf("%v", statusCode) }
+				{ message }
+			</h2>
+		</div>
+		<div class="columns-2 gap-8 text-justify leading-tight mb-8">
+			<p class="text-xl capitalize font-bold mb-4">
+				ERROR STRIKES AGAIN!
+			</p>
+			<p class="mb-4">
+				In an unprecedented turn of events, our esteemed website has been struck by yet another mysterious error.
+				Sources close to the development team report that the cause of this disruption is none other than:
+				&quot; { getRandomExcuse() } &quot;
+			</p>
+			<p class="mb-4">
+				Our crack team of developers is working round the clock to resolve this issue. In the meantime,
+				readers are advised to remain calm and refrain from panic-refreshing their browsers.
+			</p>
+			<p class="mb-4">
+				&quot;We've seen this kind of thing before,&quot; said lead developer Jane Doe. &quot;Usually, it's just a
+				matter of recalibrating the flux capacitor and realigning the cosmic rays. We should have everything
+				back to normal in no time.&quot;
+			</p>
+			<p class="mb-4">
+				Until the issue is resolved, we recommend our readers try turning it off and on again, or perhaps
+				take a leisurely stroll back to our homepage.
+			</p>
+			<div class="break-inside-avoid">
+				<h3 class="text-xl font-bold mb-2">What You Can Do</h3>
+				<ol class="list-decimal list-inside mb-4">
+					<li>Remain calm</li>
+					<li>Try refreshing the page</li>
+					<li>Check your internet connection</li>
+					<li>Contact our support team</li>
+				</ol>
 			</div>
-		</main>
-	}
+		</div>
+		<div class="flex justify-center space-x-4 mb-8">
+			@component.NewButton(
+			component.WithButtonColor(component.ButtonSecondary),
+			component.WithButtonType(component.ButtonTypeButton),
+			component.WithButtonOnClick(reloadPage()),
+			) {
+			<p class="text-base!">Try turning it off and on again</p>
+			}
+			@component.NewButton(
+			component.WithButtonLink("/"),
+			component.WithButtonColor(component.ButtonTertiary),
+			component.WithButtonType(component.ButtonTypeLink),
+			) {
+			<p class="text-base!">Or escape back to the homepage while you still can</p>
+			}
+		</div>
+		<div class="text-center text-sm border-t border-stone-300 pt-4">
+			<p class="mb-2">If the problem persists, please contact our tech support:</p>
+			<p class="font-mono text-lg">420 69 69 420 1337 2115</p>
+		</div>
+	</div>
+</main>
+}
 }
