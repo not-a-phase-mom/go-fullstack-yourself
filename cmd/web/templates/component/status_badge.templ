@@ -1,0 +1,13 @@
+package component
+
+templ StatusBadge(status string) {
+	if status == "draft" {
+		<span class="inline-block px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-100 rounded-full">
+			Draft
+		</span>
+	} else if status == "published" {
+		<span class="inline-block px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">
+			Published
+		</span>
+	}
+}

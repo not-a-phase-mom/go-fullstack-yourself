@@ -1,0 +1,77 @@
+package pages
+
+import (
+	"github.com/not-a-phase-mom/go-fullstack-yourself/cmd/web/templates/component"
+	"github.com/not-a-phase-mom/go-fullstack-yourself/cmd/web/templates/layout"
+	"github.com/not-a-phase-mom/go-fullstack-yourself/internal/database"
+	"strings"
+)
+
+templ EditArticlePage(user *database.User, article database.Article) {
+	@layout.DashboardLayout("Edit Article") {
+		<h2 class="mb-4 text-2xl font-bold">Edit Article</h2>
+		<form action={ templ.SafeURL("/dashboard/articles/edit/" + article.Id) } method="POST">
+			<div class="mb-4">
+				@component.NewLabel(
+					component.WithLabelColor(component.LabelColorPrimary),
+					component.WithLabelText("Title"),
+				)
+				@component.NewInput(
+					component.WithInputColor(component.InputColorPrimary),
+					component.WithInputType(component.InputTypeText),
+					component.WithInputID("title"),
+					component.WithInputName("title"),
+					component.WithInputValue(article.Title),
+					component.WithInputClass("w-full p-2 border border-gray-300"),
+				)
+			</div>
+			<div class="mb-4">
+				@component.NewLabel(
+					component.WithLabelColor(component.LabelColorPrimary),
+					component.WithLabelText("Excerpt"),
+				)
+				<textarea id="excerpt" name="excerpt" class="w-full p-2 border border-gray-300">{ article.Excerpt }</textarea>
+			</div>
+			<div class="mb-4">
+				@component.NewLabel(
+					component.WithLabelColor(component.LabelColorPrimary),
+					component.WithLabelText("Content"),
+				)
+				<textarea id="content" name="content" class="w-full p-2 border border-gray-300">{ article.Content }</textarea>
+			</div>
+			<div class="mb-4">
+				// <label class="block text-gray-700">Tags (comma separated)</label>
+				@component.NewLabel(
+					component.WithLabelColor(component.LabelColorPrimary),
+					component.WithLabelText("Tags (comma separated)"),
+				)
+				// <input
+				// 	type="text"
+				// 	name="tags"
+				// 	value={ strings.Join(article.TagsNames(), " , ") }
+				// 	class="w-full p-2 border border-gray-300"
+				// />
+				@component.NewInput(
+					component.WithInputColor(component.InputColorPrimary),
+					component.WithInputType(component.InputTypeText),
+					component.WithInputID("tags"),
+					component.WithInputName("tags"),
+					component.WithInputValue(strings.Join(article.TagsNames(), " , ")),
+					component.WithInputPlaceholder("Tags (comma separated)"),
+					component.WithInputClass("w-full p-2 border border-gray-300"),
+				)
+			</div>
+			<div class="mb-4">
+				@component.NewLabel(
+					component.WithLabelColor(component.LabelColorPrimary),
+					component.WithLabelText("Status"),
+				)
+				<select id="status" name="status" class="w-full p-2 border border-gray-300">
+					<option value="draft">Draft</option>
+					<option value="published">Published</option>
+				</select>
+			</div>
+			<button type="submit" class="px-4 py-2 text-white bg-blue-500">Update Article</button>
+		</form>
+	}
+}

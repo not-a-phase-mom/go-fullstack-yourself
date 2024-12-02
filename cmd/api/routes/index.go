@@ -16,7 +16,7 @@ func (router *Router) handleIndex(c *gin.Context) {
 	c.Writer.Header().Set("Content-Type", "text/html")
 	token, err := c.Cookie("token")
 
-	articles, err := router.Db.Article.All()
+	articles, err := router.Db.Article.All("published")
 	if err != nil {
 		fmt.Println("Article fetching: " + err.Error())
 		pages.ErrorPage(http.StatusInternalServerError, err.Error()).Render(c.Request.Context(), c.Writer)
@@ -33,11 +33,10 @@ func (router *Router) handleIndex(c *gin.Context) {
 	user, err := router.Db.User.ById(id)
 	if err != nil {
 		fmt.Println("User fetching: " + err.Error())
-		pages.ErrorPage(http.StatusUnauthorized, err.Error()).Render(c.Request.Context(), c.Writer)
+		pages.IndexPage(nil, articles, articles).Render(c.Request.Context(), c.Writer)
 		return
 	}
 
-	fmt.Printf("Articles: %v\n", articles)
 	component := pages.IndexPage(&user, articles, articles)
 	component.Render(c.Request.Context(), c.Writer)
 }

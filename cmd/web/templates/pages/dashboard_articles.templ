@@ -1,0 +1,93 @@
+package pages
+
+import (
+	"github.com/not-a-phase-mom/go-fullstack-yourself/cmd/web/templates/component"
+	"github.com/not-a-phase-mom/go-fullstack-yourself/cmd/web/templates/layout"
+	"github.com/not-a-phase-mom/go-fullstack-yourself/internal/database"
+)
+
+templ DashboardArticlesPage(user *database.User, articles []database.Article) {
+	@layout.DashboardLayout("Manage Articles") {
+		<div class="max-w-5xl mx-auto bg-stone-100 p-8 border-x border-stone-300 shadow-inner">
+			<div class="text-center mb-8">
+				<h1 class="text-6xl font-bold mb-2 font-serif">THE DAILY DEBUGGER</h1>
+				<p class="text-sm uppercase tracking-widest">Editorial Department</p>
+			</div>
+			<div class="border-y-4 border-black py-4 mb-8">
+				<h2 class="text-4xl font-bold text-center">ARTICLE MANAGEMENT</h2>
+			</div>
+			<div class="mb-6 flex justify-between items-center">
+				<p class="text-lg font-serif italic">Latest Updates from the Newsroom</p>
+				<a
+					href="/dashboard/articles/new"
+					class="inline-block px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 transition-colors duration-300"
+				>
+					Create New Article
+				</a>
+			</div>
+			<div class="space-y-6">
+				for _, article := range articles {
+					@DashboardArticlesRow(article)
+				}
+			</div>
+			<div class="mt-8 flex justify-center space-x-4">
+				<button
+					class="px-4 py-2 bg-stone-800 text-white hover:bg-stone-700 transition-colors duration-300"
+				>Previous</button>
+				<button class="px-4 py-2 bg-stone-800 text-white hover:bg-stone-700 transition-colors duration-300">Next</button>
+			</div>
+		</div>
+	}
+}
+
+templ DashboardArticlesRow(article database.Article) {
+	<div id={ "article-" + article.Id } class="bg-white border border-stone-300 shadow-sm">
+		<div class="p-6">
+			<h3 class="text-2xl font-bold mb-2">{ article.Title }</h3>
+			<p class="text-md text-stone-600 mb-4 flex gap-x-2">
+				<span>Status:</span>
+				@component.StatusBadge(article.Status)
+			</p>
+			<div class="flex justify-between items-center">
+				<div class="space-x-4">
+					<a
+						href={ templ.SafeURL("/dashboard/articles/edit/" + article.Id) }
+						class="text-indigo-600 hover:underline"
+					>Edit</a>
+					<a href={ templ.SafeURL("/articles/" + article.Slug) } class="text-indigo-600 hover:underline">View</a>
+				</div>
+				<div>
+					if article.Status == "draft" {
+						<form
+							hx-select={ "#article-" + article.Id }
+							hx-swap="outerHTML"
+							hx-post={ "/dashboard/articles/publish/" +
+					article.Id }
+							class="inline"
+							method="POST"
+						>
+							<button
+								type="submit"
+								class="px-3 py-1 bg-green-600 text-white hover:bg-green-700 transition-colors duration-300"
+							>Publish</button>
+						</form>
+					} else if article.Status == "published" {
+						<form
+							hx-select={ "#article-" + article.Id }
+							hx-swap="outerHTML"
+							hx-post={ "/dashboard/articles/unpublish/" +
+					article.Id }
+							class="inline"
+							method="POST"
+						>
+							<button
+								type="submit"
+								class="px-3 py-1 bg-red-600 text-white hover:bg-red-700 transition-colors duration-300"
+							>Unpublish</button>
+						</form>
+					}
+				</div>
+			</div>
+		</div>
+	</div>
+}

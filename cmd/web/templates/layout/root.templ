@@ -1,6 +1,9 @@
 package layout
 
-import "github.com/not-a-phase-mom/go-fullstack-yourself/internal/database"
+import (
+	"github.com/not-a-phase-mom/go-fullstack-yourself/cmd/web/templates/component"
+	"github.com/not-a-phase-mom/go-fullstack-yourself/internal/database"
+)
 
 templ Head(title string) {
 	<head>
@@ -37,9 +40,24 @@ templ Navigation(user *database.User) {
 		if user != nil {
 			<div class="flex items-center space-x-4">
 				<span class="text-indigo-600">Welcome, { user.Name }!</span>
-				<a href="/logout" class="bg-indigo-600 font-medium text-white font-sans px-4 py-2 hover:bg-indigo-700">
-					Logout
-				</a>
+				@component.NewButton(
+					component.WithButtonColor(component.ButtonPrimary),
+					component.WithButtonSize(component.ButtonSizeDefault),
+					component.WithButtonType(component.ButtonTypeLink),
+					component.WithButtonLink("/logout"),
+				) {
+					<p class="text-base">Logout</p>
+				}
+				if user.Role == "admin" {
+					@component.NewButton(
+						component.WithButtonColor(component.ButtonPrimary),
+						component.WithButtonSize(component.ButtonSizeDefault),
+						component.WithButtonType(component.ButtonTypeLink),
+						component.WithButtonLink("/dashboard"),
+					) {
+						<p class="text-base">Dasboard</p>
+					}
+				}
 			</div>
 		} else {
 			<a href="/login" class="bg-indigo-600 text-white px-4 py-2 hover:bg-indigo-700">

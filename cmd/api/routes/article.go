@@ -1,19 +1,20 @@
 package routes
 
 import (
+	"bytes"
 	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/not-a-phase-mom/go-fullstack-yourself/cmd/web/templates/pages"
 	"github.com/not-a-phase-mom/go-fullstack-yourself/internal/database"
+
+	"github.com/yuin/goldmark"
 )
 
 func (router *Router) RegisterArticleRoutes(e *gin.Engine) {
 	e.GET("/articles/:slug", router.handleGetArticle)
 	e.GET("/articles", router.handleGetAllArticles)
-	e.POST("/articles", router.handleCreateArticle)
-	e.PUT("/articles/:id", router.handleUpdateArticle)
 }
 
 func (router *Router) handleGetArticle(c *gin.Context) {
@@ -54,6 +55,16 @@ func (router *Router) handleGetArticle(c *gin.Context) {
 		userPtr = &user.User
 	}
 
+	source := []byte(article.Content)
+
+	// parse the article content from markdown to HTML
+	var buf bytes.Buffer
+	if err := goldmark.Convert(source, &buf); err != nil {
+		panic(err)
+	}
+
+	article.Content = buf.String()
+
 	// Render the article page
 	component := pages.ArticlePage(userPtr, &article)
 	component.Render(c.Request.Context(), c.Writer)
@@ -80,7 +91,7 @@ func (router *Router) handleGetAllArticles(c *gin.Context) {
 	}
 
 	// Fetch all articles
-	articles, err := router.Db.Article.All()
+	articles, err := router.Db.Article.All("published")
 	if err != nil {
 		pages.ErrorPage(http.StatusInternalServerError, err.Error()).Render(c.Request.Context(), c.Writer)
 		return
@@ -96,12 +107,4 @@ func (router *Router) handleGetAllArticles(c *gin.Context) {
 	}
 	component := pages.ArticlesPage(userPtr, articles)
 	component.Render(c.Request.Context(), c.Writer)
-}
-
-func (router *Router) handleCreateArticle(c *gin.Context) {
-	// TODO: Implement article creation with authentication
-}
-
-func (router *Router) handleUpdateArticle(c *gin.Context) {
-	// TODO: Implement article update with authentication
 }

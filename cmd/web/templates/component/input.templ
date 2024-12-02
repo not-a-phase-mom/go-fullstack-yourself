@@ -99,6 +99,7 @@ type Input struct {
 	Required     bool
 	Disabled     bool
 	Value        string
+	Class        string
 }
 
 // Input functional options
@@ -172,11 +173,18 @@ func WithInputValue(value string) func(*Input) {
 	}
 }
 
+func WithInputClass(class string) func(*Input) {
+	return func(i *Input) {
+		i.Class = class
+	}
+}
+
 func (i *Input) Render(ctx context.Context, w io.Writer) error {
 	return input(i).Render(ctx, w)
 }
 
 templ input(i *Input) {
+	{{ inputClasses := classes(INPUT_BASE, i.Color.String(), i.Size.String(), i.Class) }}
 	<input
 		type={ i.Type.String() }
 		id={ i.ID }
@@ -186,7 +194,6 @@ templ input(i *Input) {
 		value={ i.Value }
 		required?={ i.Required }
 		disabled?={ i.Disabled }
-		class={ classes(INPUT_BASE, i.Color.String(),
-	i.Size.String()) }
+		class={ inputClasses }
 	/>
 }

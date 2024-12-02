@@ -27,13 +27,15 @@ func (router *Router) handleLogin(c *gin.Context) {
 	if err == nil {
 		id, err := router.R.GetValue(token)
 		if err != nil {
-			pages.ErrorPage(http.StatusNotFound, err.Error()).Render(c.Request.Context(), c.Writer)
+			c.SetCookie("token", "", -1, "/", "localhost", false, true)
+			pages.LoginPage("").Render(c.Request.Context(), c.Writer)
 			return
 		}
 
 		user, err := router.Db.User.ById(id)
 		if err != nil {
-			pages.ErrorPage(http.StatusInternalServerError, err.Error()).Render(c.Request.Context(), c.Writer)
+			c.SetCookie("token", "", -1, "/", "localhost", false, true)
+			pages.LoginPage("").Render(c.Request.Context(), c.Writer)
 			return
 		}
 

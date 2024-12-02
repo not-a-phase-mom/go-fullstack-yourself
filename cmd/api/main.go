@@ -42,6 +42,13 @@ func main() {
 		log.Fatalf("failed to connect to the database: %v", err)
 	}
 
+	// errr := database.DropAllTables(db.Db, []string{"users", "articles", "tags", "article_tags"})
+	// if errr != nil {
+	// 	log.Fatalf("failed to drop tables: %v", err)
+	// } else {
+	// 	log.Println("dropped tables")
+	// }
+
 	// connect to redis
 	r, err := redis.InitRedis(REDIS_ADDR, REDIS_PASSWORD, REDIS_DB)
 	defer r.Close()
@@ -67,6 +74,7 @@ func main() {
 	router.RegisterUserRoutes(e)
 	router.RegisterIndexRoutes(e)
 	router.RegisterArticleRoutes(e)
+	router.RegisterDashboardRoutes(e)
 
 	e.Run(":" + PORT)
 }

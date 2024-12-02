@@ -1,0 +1,54 @@
+
+package pages
+
+import (
+	"github.com/not-a-phase-mom/go-fullstack-yourself/cmd/web/templates/component"
+	"github.com/not-a-phase-mom/go-fullstack-yourself/cmd/web/templates/layout"
+	"github.com/not-a-phase-mom/go-fullstack-yourself/internal/database"
+)
+
+templ NewArticlePage(user *database.User) {
+	@layout.DashboardLayout("Create New Article") {
+		<h2 class="mb-4 text-2xl font-bold">Create New Article</h2>
+		<form action="/dashboard/articles/new" method="POST">
+			<div class="mb-4">
+				<label class="block text-gray-700">Title</label>
+				// <input type="text" name="title" class="w-full p-2 border border-gray-300">
+				@component.NewInput(
+					component.WithInputColor(component.InputColorPrimary),
+					component.WithInputType(component.InputTypeText),
+					component.WithInputName("title"),
+					component.WithInputPlaceholder("Title"),
+					component.WithInputClass("w-full p-2 border border-gray-300"),
+				)
+			</div>
+			<div class="mb-4">
+				<label class="block text-gray-700">Excerpt</label>
+				<textarea name="excerpt" class="w-full p-2 border border-gray-300"></textarea>
+			</div>
+			<div class="mb-4">
+				<label class="block text-gray-700">Content</label>
+				<textarea name="content" class="w-full p-2 border border-gray-300"></textarea>
+			</div>
+			<div class="mb-4">
+				<label class="block text-gray-700">Tags (comma separated)</label>
+				// <input type="text" name="tags" class="w-full p-2 border border-gray-300">
+				@component.NewInput(
+					component.WithInputColor(component.InputColorPrimary),
+					component.WithInputType(component.InputTypeText),
+					component.WithInputName("tags"),
+					component.WithInputPlaceholder("Tags (comma separated)"),
+					component.WithInputClass("w-full p-2 border border-gray-300"),
+				)
+			</div>
+			// <button type="submit" class="px-4 py-2 text-white bg-blue-500">Create Article</button>
+			@component.NewButton(
+				component.WithButtonColor(component.ButtonPrimary),
+				component.WithButtonSize(component.ButtonSizeDefault),
+				component.WithButtonType(component.ButtonTypeSubmit),
+			) {
+				Create Article
+			}
+		</form>
+	}
+}

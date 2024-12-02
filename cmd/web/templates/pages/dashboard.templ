@@ -1,0 +1,35 @@
+package pages
+
+import (
+	"github.com/not-a-phase-mom/go-fullstack-yourself/cmd/web/templates/layout"
+	"github.com/not-a-phase-mom/go-fullstack-yourself/internal/database"
+)
+
+templ DashboardPage(user *database.User) {
+	@layout.DashboardLayout("Dashboard") {
+		<div className="max-w-4xl mx-auto">
+			<h1 class="font-serif text-2xl font-bold text-stone-800">Dashboard</h1>
+			<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+				<div class="p-6 border border-stone-300">
+					<h2 class="mb-4 text-2xl font-bold">Quick Actions</h2>
+					<ul class="space-y-2">
+						<li>
+							<a href="/dashboard/create" class="text-indigo-500 hover:underline">Create New Article</a>
+						</li>
+						<li>
+							<a href="/dashboard/articles" class="text-indigo-500 hover:underline">Manage Articles</a>
+						</li>
+					</ul>
+				</div>
+				<div class="p-6 border border-stone-300">
+					<h2 class="mb-4 text-2xl font-bold">Recent Activity</h2>
+					<ul class="space-y-2 text-sm">
+						<li>New article created: "The Rise of AI in Web Development"</li>
+						<li>Article updated: "10 Tips for Debugging Like a Pro"</li>
+						<li>Comment moderated on "Why Python is the Best First Language"</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	}
+}

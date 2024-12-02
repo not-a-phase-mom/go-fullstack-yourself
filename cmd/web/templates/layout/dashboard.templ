@@ -1,0 +1,44 @@
+package layout
+
+templ Sidebar() {
+	<nav class="w-64 p-4 border-r bg-stone-100 border-stone-300">
+		<ul class="space-y-2">
+			<li>
+				<a href="/dashboard" class="text-stone-800 hover:underline">Dashboard</a>
+			</li>
+			<li>
+				<a href="/dashboard/articles" class="text-stone-800 hover:underline">Manage Articles</a>
+			</li>
+			<li>
+				<a href="/dashboard/articles/new" class="text-stone-800 hover:underline">Create Article</a>
+			</li>
+			<li>
+				<a href="/" class="text-stone-800 hover:underline">View Site</a>
+			</li>
+			<li>
+				<a href="/api/auth/signout" class="text-stone-800 hover:underline">Sign Out</a>
+			</li>
+		</ul>
+	</nav>
+}
+
+templ DashboardLayout(title string) {
+	<!DOCTYPE html>
+	<html lang="en">
+		@Head(title)
+		<body class="flex flex-col min-h-screen font-serif bg-stone-100">
+			<header class="py-4 border-b-4 bg-stone-200 border-stone-900">
+				<div class="container px-4 mx-auto">
+					<h1 class="text-4xl font-bold text-center">The Daily Debugger - Admin</h1>
+				</div>
+			</header>
+			<div class="flex flex-grow">
+				@Sidebar()
+				<main class="flex-1 p-8">
+					{ children... }
+				</main>
+			</div>
+			@SiteFooter()
+		</body>
+	</html>
+}

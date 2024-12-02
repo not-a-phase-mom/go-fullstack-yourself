@@ -5,11 +5,28 @@ import (
 	"github.com/not-a-phase-mom/go-fullstack-yourself/internal/database"
 )
 
+templ ArticleHeader(article *database.Article) {
+}
+
 templ ArticlePage(user *database.User, article *database.Article) {
 	@layout.RootLayout("Go Fullstack Yourself | "+article.Title, user) {
 		<div>
-			<h1 class="text-2xl">{ article.Title }</h1>
-			<p>{ article.Content }</p>
+			<main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+				<div class="max-w-5xl mx-auto bg-white p-8 border border-stone-300 shadow-md">
+					<h1 class="text-4xl font-bold mb-4">{ article.Title }</h1>
+					<p
+						id="date"
+						class="text-sm text-stone-600 mb-6"
+						data-date={ article.PublishedAt.String() }
+						data-prefix="Published on:"
+					></p>
+					<div class="prose prose-stone">
+						<main id="article" data-content={ article.Content } class="prose"></main>
+					</div>
+				</div>
+			</main>
+			<script src="/assets/js/article.js"></script>
+			<script src="/assets/js/date-formatter.js"></script>
 		</div>
 	}
 }

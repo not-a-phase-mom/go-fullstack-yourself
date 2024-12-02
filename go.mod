@@ -10,6 +10,7 @@ require (
 	github.com/jackc/pgconn v1.14.3
 	github.com/jackc/pgx/v5 v5.7.1
 	github.com/joho/godotenv v1.5.1
+	github.com/yuin/goldmark v1.7.8
 	golang.org/x/exp v0.0.0-20241108190413-2d47ceb2692f
 )
 
