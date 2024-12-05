@@ -1,54 +1,99 @@
-
 package pages
 
 import (
-	"github.com/not-a-phase-mom/go-fullstack-yourself/cmd/web/templates/component"
-	"github.com/not-a-phase-mom/go-fullstack-yourself/cmd/web/templates/layout"
-	"github.com/not-a-phase-mom/go-fullstack-yourself/internal/database"
+"github.com/not-a-phase-mom/go-fullstack-yourself/cmd/web/templates/component"
+"github.com/not-a-phase-mom/go-fullstack-yourself/cmd/web/templates/layout"
+"github.com/not-a-phase-mom/go-fullstack-yourself/internal/database"
 )
 
-templ NewArticlePage(user *database.User) {
-	@layout.DashboardLayout("Create New Article") {
-		<h2 class="mb-4 text-2xl font-bold">Create New Article</h2>
-		<form action="/dashboard/articles/new" method="POST">
-			<div class="mb-4">
-				<label class="block text-gray-700">Title</label>
-				// <input type="text" name="title" class="w-full p-2 border border-gray-300">
-				@component.NewInput(
-					component.WithInputColor(component.InputColorPrimary),
-					component.WithInputType(component.InputTypeText),
-					component.WithInputName("title"),
-					component.WithInputPlaceholder("Title"),
-					component.WithInputClass("w-full p-2 border border-gray-300"),
-				)
-			</div>
-			<div class="mb-4">
-				<label class="block text-gray-700">Excerpt</label>
-				<textarea name="excerpt" class="w-full p-2 border border-gray-300"></textarea>
-			</div>
-			<div class="mb-4">
-				<label class="block text-gray-700">Content</label>
-				<textarea name="content" class="w-full p-2 border border-gray-300"></textarea>
-			</div>
-			<div class="mb-4">
-				<label class="block text-gray-700">Tags (comma separated)</label>
-				// <input type="text" name="tags" class="w-full p-2 border border-gray-300">
-				@component.NewInput(
-					component.WithInputColor(component.InputColorPrimary),
-					component.WithInputType(component.InputTypeText),
-					component.WithInputName("tags"),
-					component.WithInputPlaceholder("Tags (comma separated)"),
-					component.WithInputClass("w-full p-2 border border-gray-300"),
-				)
-			</div>
-			// <button type="submit" class="px-4 py-2 text-white bg-blue-500">Create Article</button>
-			@component.NewButton(
-				component.WithButtonColor(component.ButtonPrimary),
-				component.WithButtonSize(component.ButtonSizeDefault),
-				component.WithButtonType(component.ButtonTypeSubmit),
-			) {
-				Create Article
-			}
-		</form>
+templ NewArticlePage(user *database.User, article *database.ArticleCreation, errorMessage string) {
+// we want to go over each tag and map it to a string array
+{{ tags := "" }}
+{{for i, tag := range article.Tags {
+if tag.Name != "" {
+if i == 0 {
+tags = tag.Name
+} else {
+tags = tags + ", " + tag.Name
+}
+}
+}
+}}
+@layout.DashboardLayout("Create New Article") {
+<h2 class="mb-4 text-2xl font-bold">Create New Article</h2>
+<form hx-post="/dashboard/articles/new" hx-target="#error-message" hx-swap="innerHTML" method="POST"
+	id="new-article-form">
+	<div class="mb-4">
+		<label class="block text-gray-700">Title</label>
+		// <input type="text" name="title" class="w-full p-2 border border-gray-300">
+		@component.NewInput(
+		component.WithInputColor(component.InputColorPrimary),
+		component.WithInputType(component.InputTypeText),
+		component.WithInputName("title"),
+		component.WithInputPlaceholder("The best article title"),
+		component.WithInputClass("w-full p-2 border border-gray-300"),
+		component.WithInputValue(article.Title),
+		)
+	</div>
+	<div class="mb-4">
+		<label class="block text-gray-700">Excerpt</label>
+		<textarea name="excerpt" class="w-full p-2 border border-gray-300" placeholder="The most eye-catching excerpt">
+			{
+			article.Excerpt }
+		</textarea>
+	</div>
+	<div class="mb-4">
+		<label class="block text-gray-700">Content</label>
+		<textarea name="content" class="w-full p-2 border border-gray-300" placeholder="Fuck you">
+			{ article.Content }
+		</textarea>
+	</div>
+	<div class="mb-4">
+		<label class="block text-gray-700">Tags</label>
+		// <input type="text" name="tags" class="w-full p-2 border border-gray-300">
+		@component.NewInput(
+		component.WithInputColor(component.InputColorPrimary),
+		component.WithInputType(component.InputTypeText),
+		component.WithInputName("tags"),
+		component.WithInputPlaceholder("Tags (comma separated)"),
+		component.WithInputClass("w-full p-2 border border-gray-300"),
+		component.WithInputValue(tags),
+		)
+	</div>
+	// <button type="submit" class="px-4 py-2 text-white bg-blue-500">Create Article</button>
+	<div class="flex items-center gap-x-2">
+		@component.NewButton(
+		component.WithButtonColor(component.ButtonPrimary),
+		component.WithButtonSize(component.ButtonSizeDefault),
+		component.WithButtonType(component.ButtonTypeSubmit),
+		component.WithButtonClass("whitespace-nowrap"),
+		) {
+		Create Article
+		}
+	</div>
+	<script src="/assets/js/article.js"></script>
+</form>
+<form hx-post="/dashboard/articles/upload" hx-target="#error-message" hx-swap="outerHTML" method="POST"
+	class="flex items-center gap-x-2 mt-4" enctype="multipart/form-data">
+	@component.NewInput(
+	component.WithInputType(component.InputTypeFile),
+	component.WithInputName("file-upload"),
+	component.WithInputID("file-upload"),
+	component.WithInputClass("max-w-xs cursor-pointer"),
+	)
+	@component.NewButton(
+	component.WithButtonColor(component.ButtonPrimary),
+	component.WithButtonSize(component.ButtonSizeDefault),
+	component.WithButtonType(component.ButtonTypeSubmit),
+	component.WithButtonClass("whitespace-nowrap"),
+	) {
+	Upload File
 	}
+</form>
+<div id="error-message">
+	if errorMessage != "" {
+	@component.ErrorMessage(errorMessage)
+	}
+</div>
+}
 }

@@ -28,10 +28,11 @@ type Article struct {
 }
 
 type ArticleCreation struct {
-	Title    string `form:"title"`
-	Content  string `form:"content"`
-	Excerpt  string `form:"excerpt"`
-	AuthorId string `form:"author_id"`
+	Title    string        `form:"title"`
+	Content  string        `form:"content"`
+	Excerpt  string        `form:"excerpt"`
+	AuthorId string        `form:"author_id"`
+	Tags     []TagCreation `form:"tags"`
 }
 
 func (a *ArticleModel) Create(article ArticleCreation, tags []TagCreation) (string, error) {
