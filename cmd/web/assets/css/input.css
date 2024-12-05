@@ -3,6 +3,15 @@
 /*@import "tailwindcss/components";*/
 /*@import "tailwindcss/utilities";*/
 
+@font-face {
+  font-family: "Chomsky";
+  src: url('/assets/fonts/Chomsky.otf') format('opentype');
+}
+
+.chomsky {
+  font-family: 'Chomsky', sans-serif;
+}
+
 @source "./cmd/web/templates/**/*.html";
 @source "./cmd/web/templates/**/*.templ";
 
@@ -15,6 +24,7 @@
     --font-serif: 'IBM Plex Serif', serif;
     --font-mono: 'IBM Plex Mono', monospace;
     --font-display: 'Poppins', sans-serif;
+    --font-chomsky: 'Chomsky', sans-serif;
 
 
     /* ... */
@@ -82,18 +92,20 @@
 .prose ul,
 .prose ol {
   @apply mb-4 pl-5;
+  list-style-type: decimal;
 }
 
 .prose li {
   @apply mb-2;
+  list-style-type: disc;
 }
 
 .prose code {
-  @apply bg-stone-100 rounded px-1 py-0.5 font-mono text-sm;
+  @apply bg-stone-200 rounded px-1 py-0.5 font-mono text-sm;
 }
 
 .prose pre {
-  @apply bg-stone-100 rounded p-4 mb-4 overflow-x-auto;
+  @apply bg-stone-200 rounded p-4 mb-4 overflow-x-auto;
 }
 
 .prose pre code {
@@ -101,5 +113,5 @@
 }
 
 .prose blockquote {
-  @apply border-l-4 border-stone-300 pl-4 italic my-4;
+  @apply border-l-4 border-stone-400 pl-4 italic my-4;
 }

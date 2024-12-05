@@ -24,7 +24,7 @@ type Article struct {
 	Tags        []Tag     `json:"tags"`
 	PublishedAt time.Time `json:"published_at"`
 	Status      string    `json:"status"`
-	AuthorId    string    `json:"author_id"`
+	Author      User      `json:"author"`
 }
 
 type ArticleCreation struct {
@@ -79,9 +79,10 @@ func (a *ArticleModel) Create(article ArticleCreation, tags []TagCreation) (stri
 
 func (a *ArticleModel) BySlug(slug string) (Article, error) {
 	var article Article
-	query := `SELECT a.id, a.title, a.slug, a.content, a.excerpt, a.published_at, a.status, a.author_id, t.id, t.name FROM articles a
+	query := `SELECT a.id, a.title, a.slug, a.content, a.excerpt, a.published_at, a.status, t.id, t.name, u.id, u.email, u.role, u.name, u.password FROM articles a
 	JOIN article_tags at ON a.id = at.article_id
 	JOIN tags t ON at.tag_id = t.id
+	JOIN users u ON a.author_id = u.id
 	WHERE a.slug = $1`
 
 	rows, err := a.DB.Query(context.Background(), query, slug)
@@ -92,7 +93,7 @@ func (a *ArticleModel) BySlug(slug string) (Article, error) {
 
 	for rows.Next() {
 		var tag Tag
-		err := rows.Scan(&article.Id, &article.Title, &article.Slug, &article.Content, &article.Excerpt, &article.PublishedAt, &article.Status, &article.AuthorId, &tag.Id, &tag.Name)
+		err := rows.Scan(&article.Id, &article.Title, &article.Slug, &article.Content, &article.Excerpt, &article.PublishedAt, &article.Status, &tag.Id, &tag.Name, &article.Author.Id, &article.Author.Email, &article.Author.Role, &article.Author.Name, &article.Author.Password)
 		if err != nil {
 			return Article{}, err
 		}
@@ -104,9 +105,10 @@ func (a *ArticleModel) BySlug(slug string) (Article, error) {
 
 func (a *ArticleModel) ById(id string) (Article, error) {
 	var article Article
-	query := `SELECT a.id, a.title, a.slug, a.content, a.excerpt, a.published_at, a.status, a.author_id, t.id, t.name FROM articles a
+	query := `SELECT a.id, a.title, a.slug, a.content, a.excerpt, a.published_at, a.status, t.id, t.name, u.id, u.email, u.role, u.name, u.password FROM articles a
 	JOIN article_tags at ON a.id = at.article_id
 	JOIN tags t ON at.tag_id = t.id
+	JOIN users u ON a.author_id = u.id
 	WHERE a.id = $1`
 
 	rows, err := a.DB.Query(context.Background(), query, id)
@@ -117,7 +119,7 @@ func (a *ArticleModel) ById(id string) (Article, error) {
 
 	for rows.Next() {
 		var tag Tag
-		err := rows.Scan(&article.Id, &article.Title, &article.Slug, &article.Content, &article.Excerpt, &article.PublishedAt, &article.Status, &article.AuthorId, &tag.Id, &tag.Name)
+		err := rows.Scan(&article.Id, &article.Title, &article.Slug, &article.Content, &article.Excerpt, &article.PublishedAt, &article.Status, &tag.Id, &tag.Name, &article.Author.Id, &article.Author.Email, &article.Author.Role, &article.Author.Name, &article.Author.Password)
 		if err != nil {
 			return Article{}, err
 		}
@@ -133,15 +135,17 @@ func (a *ArticleModel) All(status string) ([]Article, error) {
 	var rows pgx.Rows
 	var err error
 	if status != "" {
-		query = `SELECT a.id, a.title, a.slug, a.content, a.excerpt, a.published_at, a.status, a.author_id, t.id, t.name FROM articles a
+		query = `SELECT a.id, a.title, a.slug, a.content, a.excerpt, a.published_at, a.status, t.id, t.name, u.id, u.email, u.role, u.name, u.password FROM articles a
 		JOIN article_tags at ON a.id = at.article_id
 		JOIN tags t ON at.tag_id = t.id
+		JOIN users u ON a.author_id = u.id
 		WHERE a.status = $1`
 		rows, err = a.DB.Query(context.Background(), query, status)
 	} else {
-		query = `SELECT a.id, a.title, a.slug, a.content, a.excerpt, a.published_at, a.status, a.author_id, t.id, t.name FROM articles a
+		query = `SELECT a.id, a.title, a.slug, a.content, a.excerpt, a.published_at, a.status, t.id, t.name, u.id, u.email, u.role, u.name, u.password FROM articles a
 		JOIN article_tags at ON a.id = at.article_id
-		JOIN tags t ON at.tag_id = t.id`
+		JOIN tags t ON at.tag_id = t.id
+		JOIN users u ON a.author_id = u.id`
 		rows, err = a.DB.Query(context.Background(), query)
 	}
 	if err != nil {
@@ -153,7 +157,7 @@ func (a *ArticleModel) All(status string) ([]Article, error) {
 	for rows.Next() {
 		var article Article
 		var tag Tag
-		err := rows.Scan(&article.Id, &article.Title, &article.Slug, &article.Content, &article.Excerpt, &article.PublishedAt, &article.Status, &article.AuthorId, &tag.Id, &tag.Name)
+		err := rows.Scan(&article.Id, &article.Title, &article.Slug, &article.Content, &article.Excerpt, &article.PublishedAt, &article.Status, &tag.Id, &tag.Name, &article.Author.Id, &article.Author.Email, &article.Author.Role, &article.Author.Name, &article.Author.Password)
 		if err != nil {
 			return nil, err
 		}
@@ -189,9 +193,10 @@ func (a *ArticleModel) Publish(id string) (Article, error) {
 	}
 
 	var article Article
-	query = `SELECT a.id, a.title, a.slug, a.content, a.excerpt, a.published_at, a.status, a.author_id, t.id, t.name FROM articles a
+	query = `SELECT a.id, a.title, a.slug, a.content, a.excerpt, a.published_at, a.status, t.id, t.name, u.id, u.email, u.role, u.name, u.password FROM articles a
 	JOIN article_tags at ON a.id = at.article_id
 	JOIN tags t ON at.tag_id = t.id
+	JOIN users u ON a.author_id = u.id
 	WHERE a.id = $1`
 
 	rows, err := a.DB.Query(context.Background(), query, id)
@@ -202,7 +207,7 @@ func (a *ArticleModel) Publish(id string) (Article, error) {
 
 	for rows.Next() {
 		var tag Tag
-		err := rows.Scan(&article.Id, &article.Title, &article.Slug, &article.Content, &article.Excerpt, &article.PublishedAt, &article.Status, &article.AuthorId, &tag.Id, &tag.Name)
+		err := rows.Scan(&article.Id, &article.Title, &article.Slug, &article.Content, &article.Excerpt, &article.PublishedAt, &article.Status, &tag.Id, &tag.Name, &article.Author.Id, &article.Author.Email, &article.Author.Role, &article.Author.Name, &article.Author.Password)
 		if err != nil {
 			return Article{}, err
 		}
@@ -220,7 +225,7 @@ func (a *ArticleModel) UnPublish(id string) (Article, error) {
 	}
 
 	var article Article
-	query = `SELECT a.id, a.title, a.slug, a.content, a.excerpt, a.published_at, a.status, a.author_id, t.id, t.name FROM articles a
+	query = `SELECT a.id, a.title, a.slug, a.content, a.excerpt, a.published_at, a.status, t.id, t.name, u.id, u.email, u.role, u.name, u.password FROM articles a
 	JOIN article_tags at ON a.id = at.article_id
 	JOIN tags t ON at.tag_id = t.id
 	WHERE a.id = $1`
@@ -233,7 +238,7 @@ func (a *ArticleModel) UnPublish(id string) (Article, error) {
 
 	for rows.Next() {
 		var tag Tag
-		err := rows.Scan(&article.Id, &article.Title, &article.Slug, &article.Content, &article.Excerpt, &article.PublishedAt, &article.Status, &article.AuthorId, &tag.Id, &tag.Name)
+		err := rows.Scan(&article.Id, &article.Title, &article.Slug, &article.Content, &article.Excerpt, &article.PublishedAt, &article.Status, &tag.Id, &tag.Name, &article.Author.Id, &article.Author.Email, &article.Author.Role, &article.Author.Name, &article.Author.Password)
 		if err != nil {
 			return Article{}, err
 		}
